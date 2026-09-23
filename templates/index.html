@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Diabetes Prediction Study</title><style>
+*{box-sizing:border-box}body{margin:0;background:#f5f7fa;color:#172331;font:16px/1.5 Arial,sans-serif}
+main{max-width:1040px;margin:28px auto;padding:24px}h1{font-size:29px;margin:8px 0}h2{font-size:20px;margin-top:0}
+.eyebrow{font-weight:bold;font-size:12px;letter-spacing:1.3px;color:#335875}.intro{max-width:860px;color:#405264}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:25px}.panel{background:white;border:1px solid #d4dde5;border-radius:12px;padding:24px}
+label{display:block;font-weight:bold;margin-top:14px}input{font-size:17px;width:100%;padding:11px;border:1px solid #869baa;border-radius:5px;margin-top:4px}
+.unit,.hint{color:#526578;font-size:13px;font-weight:normal}.error{color:#a02024;font-size:14px;margin:4px 0}
+button,.button{display:inline-block;padding:12px 16px;border:0;border-radius:5px;background:#245a79;color:white;font-size:15px;text-decoration:none;cursor:pointer;margin-top:18px}
+.button.secondary{background:#edf2f6;color:#253a4c;margin-left:5px}.result{font-size:22px;font-weight:bold;margin:8px 0}
+.barrow{margin:11px 0}.track{position:relative;height:15px;background:#eef1f4;border-radius:2px}.axis{position:absolute;left:50%;height:15px;border-left:1px solid #526578}
+.bar{position:absolute;height:15px}.pos{left:50%;background:#9c5a30}.neg{right:50%;background:#36748c}.legend{display:flex;justify-content:space-between;font-size:12px;color:#526578}
+details{margin-top:17px}summary{cursor:pointer;font-weight:bold}.notice{border-top:1px solid #d4dde5;padding-top:16px;margin-top:24px;color:#526578;font-size:13px}
+@media(max-width:700px){main{margin:0;padding:18px}.grid{grid-template-columns:1fr}.panel{padding:18px}}
+</style></head><body><main>
+<div class="eyebrow">PROJECT GROUP 9 / PHASE 2</div><h1>Diabetes Prediction Study</h1>
+<p class="intro">Enter the four measurements used by the existing model. This educational demo was built from a dataset of adult Pima Indian women; it is not validated for other populations.</p>
+<div class="grid"><section class="panel"><h2>1 Enter measurements</h2>
+<form action="/predict" method="post">
+{% for field in fields %}<label for="{{field.name}}">{{field.label}} <span class="unit">{{field.unit}}</span></label>
+<input id="{{field.name}}" name="{{field.name}}" type="number" step="{{field.step}}" required value="{{values.get(field.name,'')}}" aria-describedby="{{field.name}}-help" {% if errors.get(field.name) %}aria-invalid="true"{% endif %}>
+<div id="{{field.name}}-help" class="{{'error' if errors.get(field.name) else 'hint'}}">{{errors.get(field.name,'Use the stated units. Do not guess missing values.')}}</div>{% endfor %}
+<button type="submit">Run prediction</button><a href="/" class="button secondary">Clear form</a></form></section>
+<section class="panel" aria-live="polite"><h2>2 Review the model result</h2>
+{% if result %}<p class="result">{{'Positive model prediction' if result.prediction else 'Negative model prediction'}}</p>
+<p>This output is not a diagnosis and cannot rule diabetes in or out. Discuss health concerns with a qualified clinician.</p>
+<h2 style="margin-top:25px">What changed the model score</h2><p class="hint">Compared with a reference profile of nonzero dataset medians. Bars show model contributions, not causes.</p>
+{% for bar in result.bars %}<div class="barrow"><div>{{bar.name}} <span class="hint">{{'%+.3f'|format(bar.value)}}</span></div><div class="track" role="img" aria-label="{{bar.name}} contribution {{bar.value}}"><div class="axis"></div><div class="bar {{'pos' if bar.positive else 'neg'}}" style="width:{{bar.width}}%"></div></div></div>{% endfor %}
+<div class="legend"><span>Lower model score</span><span>Higher model score</span></div>
+<details><summary>About this result</summary><p class="hint">This is the original saved linear SVC with corrected Insulin scaling. It does not provide a calibrated probability.</p><p class="hint">Decision score {{'%.3f'|format(result.margin)}}. Reference score {{'%.3f'|format(result.reference_margin)}}. Reference inputs: {{result.reference}}.</p></details>
+{% else %}<p>Submit complete measurements to see the prediction and the contribution chart.</p><p class="hint">Missing, invalid and out-of-range values must be corrected before prediction.</p>{% endif %}
+</section></div><p class="notice">Local educational prototype. Submitted measurements are not saved by this application. Dataset ranges are not clinical reference ranges.</p>
+</main></body></html>
