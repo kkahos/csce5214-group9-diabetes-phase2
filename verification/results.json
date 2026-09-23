@@ -1,0 +1,45 @@
+{
+  "saved_model_rows_checked": 768,
+  "predictions_matching_independent_refit": 768,
+  "max_margin_difference_vs_refit": 2.7711166694643907e-13,
+  "invalid_input_cases": 9,
+  "all_checks_passed": true,
+  "example": {
+    "prediction": 1,
+    "margin": 0.34188529652386546,
+    "bars": [
+      {
+        "name": "Glucose",
+        "value": 0.773,
+        "width": 46.0,
+        "positive": true
+      },
+      {
+        "name": "Insulin",
+        "value": -0.003,
+        "width": 0.15,
+        "positive": false
+      },
+      {
+        "name": "BMI",
+        "value": 0.059,
+        "width": 3.48,
+        "positive": true
+      },
+      {
+        "name": "Age",
+        "value": 0.331,
+        "width": 19.7,
+        "positive": true
+      }
+    ],
+    "reference": {
+      "Glucose": 117.0,
+      "Insulin": 125.0,
+      "BMI": 32.3,
+      "Age": 29.0
+    },
+    "reference_margin": -0.8181872676315418
+  }
+}
+
